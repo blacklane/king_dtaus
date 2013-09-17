@@ -48,7 +48,8 @@ module KingDta
     # @param [String|Integer] number
     def bank_account_number=(number)
       nr_str = "#{number}".gsub(/\s/,'')
-      raise ArgumentError.new('Bank account number too long, max 10 allowed') if nr_str.length > 10
+      #raise ArgumentError.new('Bank account number too long, max 10 allowed') if nr_str.length > 10
+      raise ArgumentError.new('Bank account number is not a number') unless nr_str =~ /\A[0-9]+\Z/
       raise ArgumentError.new('Bank account number cannot be 0') if nr_str == '0'
 
       @bank_account_number = nr_str.to_i
@@ -61,6 +62,7 @@ module KingDta
     def bank_number=(number)
       nr_str = "#{number}".gsub(/\s/,'')
       #raise ArgumentError.new('Bank number too long, max 8 allowed') if nr_str.length > 8
+      raise ArgumentError.new('Bank number is not a number') unless nr_str =~ /\A[0-9]+\Z/
       raise ArgumentError.new('Bank number cannot be 0') if nr_str == '0'
 
       @bank_number = nr_str.to_i
