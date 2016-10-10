@@ -47,6 +47,7 @@ module KingDta
     # DTA relies on integers for checksums and field values.
     # @param [String|Integer] number
     def bank_account_number=(number)
+      raise ArgumentError.new('Bank account number cannot be nil') if number.nil?
       nr_str = "#{number}".gsub(/\s/,'')
       #raise ArgumentError.new('Bank account number too long, max 10 allowed') if nr_str.length > 10
       raise ArgumentError.new('Bank account number is not a number') unless nr_str =~ /\A[0-9]+\Z/
@@ -60,6 +61,7 @@ module KingDta
     # DTA relies on integers for checksums and field values.
     # @param [String|Integer] number
     def bank_number=(number)
+      raise ArgumentError.new('Bank number cannot be nil') if number.nil?
       nr_str = "#{number}".gsub(/\s/,'')
       #raise ArgumentError.new('Bank number too long, max 8 allowed') if nr_str.length > 8
       raise ArgumentError.new('Bank number is not a number') unless nr_str =~ /\A[0-9]+\Z/
