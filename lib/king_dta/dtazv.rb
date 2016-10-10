@@ -198,7 +198,7 @@ module KingDta
       data2  = '0768'
       data2 += 'T'
       data2 += '%08i' % @account.bank_number
-      data2 += 'EUR'
+      data2 += @account.bank_account_currency || 'EUR'
       data2 += '%010i'  % @account.bank_account_number
       data2 += @date.strftime("%y%m%d")                             # KANN, 5 Ausführungstermin Einzelzahlung, wenn abweichend von Q8
       data2 += '%08i'  % 0                                          # KANN/PFLICHT 6 BLZ
