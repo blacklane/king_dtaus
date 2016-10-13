@@ -7,6 +7,7 @@ module KingDta
     attr_accessor :bank_street, :bank_city,
                   :bank_zip, :bank_name, :bank_country_code, :bank_iban,
                   :bank_bic,
+                  :bank_account_currency,
                   :owner_name, :owner_number, :owner_street, :owner_city,
                   :owner_zip_code, :owner_country_code
     attr_reader :bank_account_number, :bank_number
@@ -39,6 +40,8 @@ module KingDta
       raise ArgumentError.new('Bank name too long, max 35 allowed') if @bank_name && @bank_name.length > 35
       raise ArgumentError.new('Bank country code too long, max 2 allowed') if @bank_country_code && @bank_country_code.length > 2
 
+      raise ArgumentError.new("Bank account currency wrong length: #{@bank_account_currency.length}, must be 3 if provided") if @bank_account_currency && @bank_account_currency.length != 3
+
       @owner_country_code = @bank_iban[0..1 ] if @bank_iban && !@owner_country_code
     end
 
@@ -47,6 +50,7 @@ module KingDta
     # DTA relies on integers for checksums and field values.
     # @param [String|Integer] number
     def bank_account_number=(number)
+      raise ArgumentError.new('Bank account number cannot be nil') if number.nil?
       nr_str = "#{number}".gsub(/\s/,'')
       #raise ArgumentError.new('Bank account number too long, max 10 allowed') if nr_str.length > 10
       raise ArgumentError.new('Bank account number is not a number') unless nr_str =~ /\A[0-9]+\Z/
@@ -60,6 +64,7 @@ module KingDta
     # DTA relies on integers for checksums and field values.
     # @param [String|Integer] number
     def bank_number=(number)
+      raise ArgumentError.new('Bank number cannot be nil') if number.nil?
       nr_str = "#{number}".gsub(/\s/,'')
       #raise ArgumentError.new('Bank number too long, max 8 allowed') if nr_str.length > 8
       raise ArgumentError.new('Bank number is not a number') unless nr_str =~ /\A[0-9]+\Z/

@@ -25,11 +25,11 @@ describe KingDta::Dtazv do
   end
 
   it "should init without values" do
-    lambda{ KingDta::Dtazv.new }.should_not raise_error(ArgumentError)
+    lambda{ KingDta::Dtazv.new }.should_not raise_error
   end
 
   it "should init with valid values" do
-    lambda{ KingDta::Dtazv.new(Date.today) }.should_not raise_error(ArgumentError)
+    lambda{ KingDta::Dtazv.new(Date.today) }.should_not raise_error
   end
 
   it "should not init with an invalid date" do
@@ -76,6 +76,21 @@ describe KingDta::Dtazv do
     str.should include(receiver_opts[:owner_name].upcase)
     out = "0256Q370502991326049634JAN KUS                                                               MEINE EINE STRASSE 2               51063 MEINE KOELN                  11082801110828N0000000000                                                                    0768T37050299EUR132604963411082800000000   0000000000COBADEFF366                                                                                                                                               DE DALAI LAMA                                                            BUSH-AVENUE 55                     445555 INDIA                                                                                             /PL10105013151000002308622378      EUR00000000000220250                                                                                                                                            00000000                         0013                                                              0                                                   000256Z000000000000220000000000000001                                                                                                                                                                                                                             "
     str.should == out
+  end
+
+  context "with bank_account_currency set" do
+    before do
+      @dtazv.account = KingDta::Account.new sender_opts.merge(:bank_account_currency => 'SEK')
+    end
+
+    it "should create the whole dta string with a single booking" do
+      @dtazv.add(@booking)
+      str = @dtazv.create
+      str.length.should == 1280
+      str.should include(receiver_opts[:owner_name].upcase)
+      out = "0256Q370502991326049634JAN KUS                                                               MEINE EINE STRASSE 2               51063 MEINE KOELN                  11082801110828N0000000000                                                                    0768T37050299SEK132604963411082800000000   0000000000COBADEFF366                                                                                                                                               DE DALAI LAMA                                                            BUSH-AVENUE 55                     445555 INDIA                                                                                             /PL10105013151000002308622378      EUR00000000000220250                                                                                                                                            00000000                         0013                                                              0                                                   000256Z000000000000220000000000000001                                                                                                                                                                                                                             "
+      str.should == out
+    end
   end
 
   it "should create whole dta string with long booking text in extension" do

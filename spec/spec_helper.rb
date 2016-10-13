@@ -11,6 +11,9 @@ require 'king_dtaus'
 require 'rspec'
 require 'ostruct'
 require 'date'
+require 'i18n'
+
+I18n.available_locales = [:en]
 
 RSpec.configure do |config|
 end
@@ -19,6 +22,7 @@ end
 def sender_opts
   {
     :bank_account_number => '1326049634',
+    :bank_account_currency => 'EUR',
     :bank_number => '37050299',
     :bank_name => 'Kreissparkasse Köln',
     :bank_street => 'Bank Eine Straße 2',
@@ -69,6 +73,7 @@ end
 def test_kto1
   opts = {
             :bank_account_number => '7828970037',
+            :bank_account_currency => 'EUR',
             :bank_number => '37040044',
             :owner_name =>'Gimme your Money AG',
             :bank_name => 'Commerzbank Köln',
@@ -81,6 +86,7 @@ end
 def test_kto2
   opts = {
             :bank_account_number => '2787777',
+            :bank_account_currency => 'EUR',
             :bank_number => '37040044',
             :owner_name =>'Peter & May GmbH',
             :bank_name => 'Commerzbank Köln',
@@ -93,6 +99,7 @@ end
 def test_kto3
   opts = {
             :bank_account_number => '2787777',
+            :bank_account_currency => 'EUR',
             :bank_number => '37040044',
             :owner_name =>'Andrew Müller',
             :bank_name => 'Commerzbank Köln',

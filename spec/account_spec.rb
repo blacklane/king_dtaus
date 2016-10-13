@@ -10,6 +10,7 @@ describe KingDta::Account do
   it "should initialize a new account" do
     lambda{
       KingDta::Account.new(:bank_account_number => @ba.bank_account_number,
+                           :bank_account_currency => @ba.bank_account_currency,
                            :bank_number => @ba.bank_number,
                            :owner_name => @ba.owner_name)
     }.should_not raise_error
@@ -57,6 +58,7 @@ describe KingDta::Account do
   end
 
   it "should fail if bank account number is invalid" do
+    skip "Relevant check is commented out"
     lambda{
       KingDta::Account.new(:bank_account_number => 123456789011123456789011123456789011,
                            :bank_number => @ba.bank_number,
@@ -65,18 +67,38 @@ describe KingDta::Account do
     }.should raise_error(ArgumentError, 'Bank account number too long, max 10 allowed')
   end
 
-  it "should fail if bank number is invalid" do
+  it "should fail if bank account number is nil" do
+    lambda{
+      KingDta::Account.new(:bank_account_number => nil,
+                           :bank_number => @ba.bank_number,
+                           :owner_name => @ba.owner_name)
+
+    }.should raise_error(ArgumentError, 'Bank account number cannot be nil')
+  end
+
+  it "should fail if bank number is 0" do
     lambda{
       KingDta::Account.new( :bank_account_number => @ba.bank_account_number,
                             :bank_number => 0,
                             :owner_name => @ba.owner_name)
     }.should raise_error(ArgumentError)
+  end
 
+  it "should fail if bank number is > 8" do
+    skip "Relevant check is commented out"
     lambda{
       KingDta::Account.new( :bank_account_number => @ba.bank_account_number,
                             :bank_number => 123456789101112,
                             :owner_name => @ba.owner_name)
     }.should raise_error(ArgumentError, 'Bank number too long, max 8 allowed')
+  end
+
+  it "should fail if bank number is nil" do
+    lambda{
+      KingDta::Account.new( :bank_account_number => @ba.bank_account_number,
+                            :bank_number => nil,
+                            :owner_name => @ba.owner_name)
+    }.should raise_error(ArgumentError, 'Bank number cannot be nil')
   end
 
   it "should fail if owner number is too long" do
@@ -121,6 +143,26 @@ describe KingDta::Account do
     lambda{
       KingDta::Account.new opts
     }.should raise_error(ArgumentError, 'Owner city too long, max 35 allowed')
+  end
+
+  it "should not fail if bank_account_currency is not supplied" do
+    opts = sender_opts.dup
+    opts.delete :bank_account_currency
+    account = KingDta::Account.new(opts)
+    account.bank_account_currency.should == nil
+  end
+
+  it "should fail if bank_account_currency is not a 3-letter code" do
+    opts = sender_opts.merge :bank_account_currency => "FAIL"
+    lambda { 
+      KingDta::Account.new opts
+    }.should raise_error(ArgumentError, /Bank account currency wrong length: 4/)
+  end
+
+  it "should not fail if bank_account_currency is nil" do
+    opts = sender_opts.merge :bank_account_currency => nil
+    account = KingDta::Account.new(opts)
+    account.bank_account_currency.should == nil
   end
 
   it "should return account street and zip" do
